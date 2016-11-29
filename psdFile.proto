@@ -1,0 +1,145 @@
+package MSSO_PSD;
+
+//Microsoft Spectrum Observatory PSD scan file data file format declaration (Protobuf).
+//Can be used to generate and/or process RMS Spectrum Observatory PSD data files.
+//Tutorial: https://developers.google.com/protocol-buffers/docs/pythontutorial
+//Last-Modified : Jul 5, 2016 (Kyeong Su Shin)
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Timestamp code from : https://github.com/mgravell/protobuf-net/blob/master/Tools/bcl.proto
+// TODO: CHECK: seems to use a somewhat different enum rules, for HOURS and MINUTES?
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+message Timestamp {
+  optional sint64 value = 1; // the offset (in units of the selected scale) from 1970/01/01
+  optional TimeSpanScale scale = 2 [default = DAYS]; // the scale of the timespan
+  enum TimeSpanScale {
+    DAYS = 0;
+    HOURS = 1;
+    MINUTES = 2;
+    SECONDS = 3;
+    MILLISECONDS = 4;
+	TICKS = 5;
+
+    MINMAX = 15; // dubious
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//Antenna information
+message AntennaConfiguration{
+  optional string AntennaType = 1;
+  optional double HeightInFeet = 2;
+  optional int32 DegreeDirection = 3;
+}
+
+//Antenna cable information.
+message CableConfiguration{
+  optional string CableType = 1;
+  optional double LengthInFeet = 2;
+}
+
+//Antenna Connector Information.
+message ConnectorConfiguration{
+  optional string ConnectorType = 1;
+}
+
+//RAW IQ Scan Settings.
+message RawIqDataConfigurationElement{
+  optional bool OutputData = 1;
+  optional double StartFrequencyHz = 2;
+  optional double StopFrequencyHz = 3;
+  optional int32 SecondsOfDataPerFile = 4;
+  optional int32 RetentionSeconds = 5;
+}
+
+//Sensor (SDR) Information and Configurations.
+message RFSensorConfigurationEndToEnd{
+  repeated CableConfiguration Cables = 1;
+  repeated ConnectorConfiguration Connectors = 2;
+  repeated AntennaConfiguration Antennas = 3;
+  optional string DescriptiveName = 4;
+  optional string DeviceType = 5;
+  optional double MinPossibleStartFrequencyHz = 6;
+  optional double MaxPossibleEndFrequencyHz = 7;
+  optional string DeviceAddress = 8;
+  optional double CurrentStartFrequencyHz = 9;                       
+  optional double CurrentStopFrequencyHz = 10;
+  optional double Gain = 11;
+  optional string AntennaPort = 12;      
+  optional string ScanPattern = 13;  
+  optional string CommunicationsChannel = 14;  
+  optional bool LockingCommunicationsChannel = 15;  
+  optional double BandwidthHz = 16;
+  optional int32 TuneSleep = 17;
+  optional int32 SamplesPerScan = 18;     
+  optional int32 NumberOfSampleBlocksToThrowAway = 19;     
+  optional int32 NumberOfSampleBlocksPerScan = 20;
+  optional bool GpsEnabled = 21;  
+}
+
+//PSD data generation and upload settings.
+message ClientAggregationConfiguration{
+  optional bool SingleScan = 1;
+  optional double MinutesOfDataPerScanFileImpl = 2;
+  optional double SecondsOfDataPerSampleImpl = 3;
+}
+
+//Combined station information and configurations, with additional information such as address.
+message MeasurementStationConfigurationEndToEnd{
+  repeated RFSensorConfigurationEndToEnd RFSensorConfigurations = 1;
+  optional ClientAggregationConfiguration AggregationConfiguration = 2;
+  optional RawIqDataConfigurationElement RawIqConfiguration = 3;  
+  optional Timestamp LastModifiedTime = 4;  
+  optional string MeasurementStationId = 5;
+  optional string Name = 6;
+  optional double Latitude = 7;
+  optional double Longitude = 8;
+  optional string Description = 9;
+  optional string Location = 10;
+  optional string AddressLine1 = 11;
+  optional string AddressLine2 = 12;
+  optional string Country = 13;
+}
+
+//"Config" section of the output file.
+//Superset of MeasurementStationConfigurationEndToEnd above.
+//(timestamp, hardware information string returned from UHD, and MeasurementStationConfigurationEndToEnd section)
+message ConfigDataBlock{
+  optional Timestamp Time_stamp = 1;  
+  optional string HardwareConfiguration = 2;
+  optional MeasurementStationConfigurationEndToEnd EndToEndConfiguration = 3;
+}
+
+//enumeration type used by SpectralPsdDataBlock below
+//to represent the type of the data within a file.
+enum ReadingKind {
+  Average = 0;
+  Minimum = 1;
+  Maximum = 2;
+  StandardDeviationOfAverage = 3;
+  StandardDeviationOfMinimum = 4;
+  StandardDeviationOfMaximum = 5;
+  AverageOfMinimum = 6;
+  AverageOfMaximum = 7;
+}
+
+//Represents a data block section present in the output PSD data file.
+//Contains time, snapshot frequency, PSD data, GPGGA location.
+message SpectralPsdDataBlock{
+  optional Timestamp Time_stamp = 1;  
+  optional double StartFrequencyHz = 2;
+  optional double StopFrequencyHz = 3;
+  optional ReadingKind Reading_Kind = 4;
+
+  repeated sint32 OutputDataPoints = 5 [packed=true];
+
+  optional string NmeaGpggaLocation = 8;  
+}
+
+//Top-level (defines the structure of the PSD scan file - one configuration information block, multiple data blocks.)
+message ScanFile{
+  optional ConfigDataBlock Config = 1;  
+  repeated SpectralPsdDataBlock SpectralPsdData = 2;
+}
