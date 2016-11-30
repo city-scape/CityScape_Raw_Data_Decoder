@@ -33,10 +33,15 @@ Command to convert PSD files (same assumptions as above):
 Using Python to directly process RAW IQ or PSD scan files:  
 
 Dependency : 
+
 	-Python 2.7 
+	
 	-Protobuf Python binding (python-protobuf)
+	
 	-MatPlotLib
+	
 	-NumPy
+	
 	-SciPy
 
 -uncompress dsor or dsox files into uncompressed protobuf files, and then pass them into the Python scripts ("rawIQ_process.py or psdFile_process.py").  
