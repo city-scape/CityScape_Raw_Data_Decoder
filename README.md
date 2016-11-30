@@ -1,13 +1,9 @@
-
 decompress.exe : Decompresses dsox or dsor files into a uncompressed Protobuffer files. Requires .NET runtime. On Linux, mono tool can be used to run this.  
 decompress.cs : source code of decompress.exe above. On Linux, mcs tool can be used to compile into the executable format.  
 protobuf-windows-build(full).zip: protobuf binary, with max file size = 512M, for Windows 7 or higher.  
 protoc.exe : protobuffer compiler (for Windows). Can be used to decode a protobuffer database file and generate a human-readable text file. Max file size = 512MB.  
 psdFile.proto : protobuf definition file for PSD files ("aggregate" files). Defines file structure of MS Spectrum Observatory PSD scan files. Can be used along with protobuf libraries to encode or decode MS Spectrum Observatory PSD files.  
 rawIQ.proto : protobuf definition file for RAW IQ files. Defines the file structure of MS Spectrum Observatory RAW IQ files. Can be used along with protobuf libraries to encode or decode MS Spectrum Observatory RAW IQ files.  
-
-Sample Outputs/aggregate.zip : Sample output of a processed PSD ("aggregate") file (in ASCII text).  
-Sample Outputs/RAW_IQ.zip : Sample output of a processed RAW IQ file (in ASCII text).  
 	
 python/psdFile_pb2.py : python protobuf "data access code" for PSD scan files. (=Python PSD scan definition file,  auto-generated from psdFile.proto file above.)  
 python/rawIQ_pb2.py : python protobuf "data access code" for RAW IQ files. (=Python RAW IQ definition file,  auto-generated from rawIQ.proto file above.)  
@@ -35,7 +31,14 @@ Command to convert PSD files (same assumptions as above):
 *"protoc" must be installed. (see below for "protoc" installation.)  
   
 Using Python to directly process RAW IQ or PSD scan files:  
--System requirement : Python 2.7 with Protobuf Python bindings, matplotlib.pyplot. (Ubuntu package : python-protobuf)  
+
+Dependency : 
+	-Python 2.7 
+	-Protobuf Python binding (python-protobuf)
+	-MatPlotLib
+	-NumPy
+	-SciPy
+
 -uncompress dsor or dsox files into uncompressed protobuf files, and then pass them into the Python scripts ("rawIQ_process.py or psdFile_process.py").  
 ex:  
 
