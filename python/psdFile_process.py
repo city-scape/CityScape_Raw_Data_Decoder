@@ -9,14 +9,18 @@
 
 #See: https://developers.google.com/protocol-buffers/docs/pythontutorial
 #(* This source code is heavily based on the example codes present on the above website.)
-#Last-modified: Jul 5, 2016 (Kyeong Su Shin)
+
+#Last-modified: Nov 27, 2016 (Kyeong Su Shin)
+#TODO : refactoring (getting quite dirty..)
 
 import sys
+import argparse
 import psdFile_pb2
 import os.path
 import time
 import matplotlib.pyplot as plt
 import numpy as np
+import scipy.io as sio
 
 #Converts "Reading Kind" enum to String.
 #("Reading Kind" enums is an enumeratation type used by the PSD scan file to identify the 
@@ -80,7 +84,7 @@ def determine_timescale(scale):
 #to print out the summarized version of the data blocks.
 #input: psdFile_pb2.ScanFile()
 #output: none (directly prints out to stdout)
-def print_file_summary(data):
+def print_file_summary(data,plot_psd,dump_csv,dump_mat):
 	
 	#Print out station configurations
 	print "\n \n \n \n -----------------CONFIG BLOCK-----------------"
@@ -91,13 +95,13 @@ def print_file_summary(data):
 
 	#Print out summary of the data blocks.
 	print "--------------DATA BLOCK SUMMARY--------------"
-	print_data_block_summary(data)
+	print_data_block_summary(data,plot_psd,dump_csv,dump_mat)
 	print "------------DATA BLOCK SUMMARY END------------ \n "
 
 #Print out summary of the data blocks.
 #input: psdFile_pb2.ScanFile()
 #output: none (directly prints out to stdout)
-def print_data_block_summary(data):
+def print_data_block_summary(data,plot_psd,dump_csv,dump_mat):
 	cnt = 0						#total number of data blocks present in a file.
 	data_cnt_sum = 0			#total number of data points (=blocks * points per each block).
 	min_freq = float("inf")	#minimum frequency observed.
@@ -124,9 +128,35 @@ def print_data_block_summary(data):
 		#!!!!!slow part!!!!!
 		db_data = data_to_float_decibel(data_block.OutputDataPoints)
 		
-		#plot the result.
-		#plt.plot(db_data[0:1023])
-		#plt.show()
+		#plot the result (if requested).
+		if plot_psd == cnt or plot_psd == 0:
+			freq_mhz = np.linspace(data_block.StartFrequencyHz/1e6,data_block.StopFrequencyHz/1e6,num=len(data_block.OutputDataPoints))
+			plt.plot(freq_mhz,db_data[0:])
+			plt.xlabel('frequency (MHz)')
+			plt.title('PSD plot. Timestamp:' + str(data_block.Time_stamp.value) + ', Type : ' + get_reading_kind(data_block.Reading_Kind))
+			plt.ylabel('PSD (dB)')
+			plt.show()
+
+		#dump to a CSV file (if requested).
+		if dump_csv == cnt or dump_csv == 0:
+			f_write.write("Block," + str(cnt) + "\n")
+			f_write.write("timestamp," + time.ctime(data_block.Time_stamp.value*time_scale  + time.altzone) + "\n")	#Python automatically adjusts the timezone, but that is not desirable. So, roll-back by adding back the time offset  "time.altzone". 
+			f_write.write("Start Freq," + str((data_block.StartFrequencyHz)/1e6) + "Mhz" + "\n")
+			f_write.write("Stop Freq," + str((data_block.StopFrequencyHz)/1e6) + "Mhz" + "\n")
+			f_write.write("Data Type," + get_reading_kind(data_block.Reading_Kind) + "\n")
+			f_write.write("NmeaGpggaLocation," + data_block.NmeaGpggaLocation + "\n")
+			f_write.write("Data count," + str(len(data_block.OutputDataPoints)) + "\n")
+			
+			#dump the main IQ data
+			f_write.write("------DATA STARTS HERE------ \n")
+			f_write.write("\n".join(str(x) for x in db_data))				
+
+			#add an extra line at the end of the block.
+			f_write.write("\n")
+
+		#dump to a mat file (if requested).
+		if dump_mat == cnt or dump_mat == 0:
+			sio.savemat(str(cnt)+'.mat',{'cnt':cnt,'timestamp':data_block.Time_stamp.value*time_scale  + time.altzone,'start_freq':data_block.StartFrequencyHz,'end_freq':data_block.StopFrequencyHz,'data_type':get_reading_kind(data_block.Reading_Kind), 'data':db_data})
 
 		#update minimum frequency and the maximum frequency observed so far (if necessary).
 		min_freq = min(min_freq, data_block.StartFrequencyHz)
@@ -147,18 +177,23 @@ def print_data_block_summary(data):
 # Main routine (int main() equivalent)
 #--------------------------------------------------
 
-#if no argument passed, warn user.
-if (len(sys.argv) <= 1):
-		print "Usage : ", sys.argv[0], " target_file"
-		sys.exit(1)
+#set argument parser
+parser = argparse.ArgumentParser()
+parser.add_argument("path", help="input file path")
+parser.add_argument("-p", "--plot-psd", type=int, nargs='?', const=-1, help="Plot PSD Data at (PLOT_PSD)th block. Prints out every snapshots if setted zero.")
+parser.add_argument("-d", "--dump-csv", type=int, nargs='?', const=-1, help="Dumps (DUMP_CSV)th data block to a CSV file. Name of the generated snapshot file is equal to the name of the input file with .csv appended at the end. Dumps out every snapshots if setted zero.")
+parser.add_argument("-m", "--dump-mat", type=int, nargs='?', const=-1, help="Dumps (DUMP_CSV)th data block to a mat file. Dumps out every snapshots if setted zero.")
 
-#if target file not found, warn user.
-elif (os.path.exists(sys.argv[1]) == False):
-		print "File not found!"
-		sys.exit(2)
+args=parser.parse_args()
 
 #open file.
-f = open(sys.argv[1],"rb");
+f = open(args.path,"rb");
+
+#make a CSV file if necessary.
+if args.dump_csv >= 0:
+	f_write = open(args.path+".csv","w");
+else:
+	f_write = "";
 
 #read and close file.
 scan_file_read = psdFile_pb2.ScanFile()
@@ -166,4 +201,8 @@ scan_file_read.ParseFromString(f.read())
 f.close()
 
 #process.
-print_file_summary(scan_file_read)
+print_file_summary(scan_file_read,args.plot_psd,args.dump_csv,args.dump_mat)
+
+#close the csv dump file.
+if args.dump_csv >= 0:
+	f_write.close()
