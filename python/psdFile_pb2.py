@@ -19,7 +19,7 @@ _sym_db = _symbol_database.Default()
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='psdFile.proto',
   package='MSSO_PSD',
-  serialized_pb=_b('\n\rpsdFile.proto\x12\x08MSSO_PSD\"\xbb\x01\n\tTimestamp\x12\r\n\x05value\x18\x01 \x01(\x12\x12\x36\n\x05scale\x18\x02 \x01(\x0e\x32!.MSSO_PSD.Timestamp.TimeSpanScale:\x04\x44\x41YS\"g\n\rTimeSpanScale\x12\x08\n\x04\x44\x41YS\x10\x00\x12\t\n\x05HOURS\x10\x01\x12\x0b\n\x07MINUTES\x10\x02\x12\x0b\n\x07SECONDS\x10\x03\x12\x10\n\x0cMILLISECONDS\x10\x04\x12\t\n\x05TICKS\x10\x05\x12\n\n\x06MINMAX\x10\x0f\"Z\n\x14\x41ntennaConfiguration\x12\x13\n\x0b\x41ntennaType\x18\x01 \x01(\t\x12\x14\n\x0cHeightInFeet\x18\x02 \x01(\x01\x12\x17\n\x0f\x44\x65greeDirection\x18\x03 \x01(\x05\"=\n\x12\x43\x61\x62leConfiguration\x12\x11\n\tCableType\x18\x01 \x01(\t\x12\x14\n\x0cLengthInFeet\x18\x02 \x01(\x01\"/\n\x16\x43onnectorConfiguration\x12\x15\n\rConnectorType\x18\x01 \x01(\t\"\x9e\x01\n\x1dRawIqDataConfigurationElement\x12\x12\n\nOutputData\x18\x01 \x01(\x08\x12\x18\n\x10StartFrequencyHz\x18\x02 \x01(\x01\x12\x17\n\x0fStopFrequencyHz\x18\x03 \x01(\x01\x12\x1c\n\x14SecondsOfDataPerFile\x18\x04 \x01(\x05\x12\x18\n\x10RetentionSeconds\x18\x05 \x01(\x05\"\xa1\x05\n\x1dRFSensorConfigurationEndToEnd\x12,\n\x06\x43\x61\x62les\x18\x01 \x03(\x0b\x32\x1c.MSSO_PSD.CableConfiguration\x12\x34\n\nConnectors\x18\x02 \x03(\x0b\x32 .MSSO_PSD.ConnectorConfiguration\x12\x30\n\x08\x41ntennas\x18\x03 \x03(\x0b\x32\x1e.MSSO_PSD.AntennaConfiguration\x12\x17\n\x0f\x44\x65scriptiveName\x18\x04 \x01(\t\x12\x12\n\nDeviceType\x18\x05 \x01(\t\x12#\n\x1bMinPossibleStartFrequencyHz\x18\x06 \x01(\x01\x12!\n\x19MaxPossibleEndFrequencyHz\x18\x07 \x01(\x01\x12\x15\n\rDeviceAddress\x18\x08 \x01(\t\x12\x1f\n\x17\x43urrentStartFrequencyHz\x18\t \x01(\x01\x12\x1e\n\x16\x43urrentStopFrequencyHz\x18\n \x01(\x01\x12\x0c\n\x04Gain\x18\x0b \x01(\x01\x12\x13\n\x0b\x41ntennaPort\x18\x0c \x01(\t\x12\x13\n\x0bScanPattern\x18\r \x01(\t\x12\x1d\n\x15\x43ommunicationsChannel\x18\x0e \x01(\t\x12$\n\x1cLockingCommunicationsChannel\x18\x0f \x01(\x08\x12\x13\n\x0b\x42\x61ndwidthHz\x18\x10 \x01(\x01\x12\x11\n\tTuneSleep\x18\x11 \x01(\x05\x12\x16\n\x0eSamplesPerScan\x18\x12 \x01(\x05\x12\'\n\x1fNumberOfSampleBlocksToThrowAway\x18\x13 \x01(\x05\x12#\n\x1bNumberOfSampleBlocksPerScan\x18\x14 \x01(\x05\x12\x12\n\nGpsEnabled\x18\x15 \x01(\x08\"~\n\x1e\x43lientAggregationConfiguration\x12\x12\n\nSingleScan\x18\x01 \x01(\x08\x12$\n\x1cMinutesOfDataPerScanFileImpl\x18\x02 \x01(\x01\x12\"\n\x1aSecondsOfDataPerSampleImpl\x18\x03 \x01(\x01\"\xe7\x03\n\'MeasurementStationConfigurationEndToEnd\x12G\n\x16RFSensorConfigurations\x18\x01 \x03(\x0b\x32\'.MSSO_PSD.RFSensorConfigurationEndToEnd\x12J\n\x18\x41ggregationConfiguration\x18\x02 \x01(\x0b\x32(.MSSO_PSD.ClientAggregationConfiguration\x12\x43\n\x12RawIqConfiguration\x18\x03 \x01(\x0b\x32\'.MSSO_PSD.RawIqDataConfigurationElement\x12-\n\x10LastModifiedTime\x18\x04 \x01(\x0b\x32\x13.MSSO_PSD.Timestamp\x12\x1c\n\x14MeasurementStationId\x18\x05 \x01(\t\x12\x0c\n\x04Name\x18\x06 \x01(\t\x12\x10\n\x08Latitude\x18\x07 \x01(\x01\x12\x11\n\tLongitude\x18\x08 \x01(\x01\x12\x13\n\x0b\x44\x65scription\x18\t \x01(\t\x12\x10\n\x08Location\x18\n \x01(\t\x12\x14\n\x0c\x41\x64\x64ressLine1\x18\x0b \x01(\t\x12\x14\n\x0c\x41\x64\x64ressLine2\x18\x0c \x01(\t\x12\x0f\n\x07\x43ountry\x18\r \x01(\t\"\xab\x01\n\x0f\x43onfigDataBlock\x12\'\n\nTime_stamp\x18\x01 \x01(\x0b\x32\x13.MSSO_PSD.Timestamp\x12\x1d\n\x15HardwareConfiguration\x18\x02 \x01(\t\x12P\n\x15\x45ndToEndConfiguration\x18\x03 \x01(\x0b\x32\x31.MSSO_PSD.MeasurementStationConfigurationEndToEnd\"\xd8\x01\n\x14SpectralPsdDataBlock\x12\'\n\nTime_stamp\x18\x01 \x01(\x0b\x32\x13.MSSO_PSD.Timestamp\x12\x18\n\x10StartFrequencyHz\x18\x02 \x01(\x01\x12\x17\n\x0fStopFrequencyHz\x18\x03 \x01(\x01\x12+\n\x0cReading_Kind\x18\x04 \x01(\x0e\x32\x15.MSSO_PSD.ReadingKind\x12\x1c\n\x10OutputDataPoints\x18\x05 \x03(\x11\x42\x02\x10\x01\x12\x19\n\x11NmeaGpggaLocation\x18\x08 \x01(\t\"n\n\x08ScanFile\x12)\n\x06\x43onfig\x18\x01 \x01(\x0b\x32\x19.MSSO_PSD.ConfigDataBlock\x12\x37\n\x0fSpectralPsdData\x18\x02 \x03(\x0b\x32\x1e.MSSO_PSD.SpectralPsdDataBlock*\xc0\x01\n\x0bReadingKind\x12\x0b\n\x07\x41verage\x10\x00\x12\x0b\n\x07Minimum\x10\x01\x12\x0b\n\x07Maximum\x10\x02\x12\x1e\n\x1aStandardDeviationOfAverage\x10\x03\x12\x1e\n\x1aStandardDeviationOfMinimum\x10\x04\x12\x1e\n\x1aStandardDeviationOfMaximum\x10\x05\x12\x14\n\x10\x41verageOfMinimum\x10\x06\x12\x14\n\x10\x41verageOfMaximum\x10\x07')
+  serialized_pb=_b('\n\rpsdFile.proto\x12\x08MSSO_PSD\"\xbb\x01\n\tTimestamp\x12\r\n\x05value\x18\x01 \x01(\x12\x12\x36\n\x05scale\x18\x02 \x01(\x0e\x32!.MSSO_PSD.Timestamp.TimeSpanScale:\x04\x44\x41YS\"g\n\rTimeSpanScale\x12\x08\n\x04\x44\x41YS\x10\x00\x12\t\n\x05HOURS\x10\x01\x12\x0b\n\x07MINUTES\x10\x02\x12\x0b\n\x07SECONDS\x10\x03\x12\x10\n\x0cMILLISECONDS\x10\x04\x12\t\n\x05TICKS\x10\x05\x12\n\n\x06MINMAX\x10\x0f\"Z\n\x14\x41ntennaConfiguration\x12\x13\n\x0b\x41ntennaType\x18\x01 \x01(\t\x12\x14\n\x0cHeightInFeet\x18\x02 \x01(\x01\x12\x17\n\x0f\x44\x65greeDirection\x18\x03 \x01(\x05\"=\n\x12\x43\x61\x62leConfiguration\x12\x11\n\tCableType\x18\x01 \x01(\t\x12\x14\n\x0cLengthInFeet\x18\x02 \x01(\x01\"/\n\x16\x43onnectorConfiguration\x12\x15\n\rConnectorType\x18\x01 \x01(\t\"\xfe\x01\n\x1dRawIqDataConfigurationElement\x12\x12\n\nOutputData\x18\x01 \x01(\x08\x12\x18\n\x10StartFrequencyHz\x18\x02 \x01(\x01\x12\x17\n\x0fStopFrequencyHz\x18\x03 \x01(\x01\x12\x1c\n\x14SecondsOfDataPerFile\x18\x04 \x01(\x05\x12\x18\n\x10RetentionSeconds\x18\x05 \x01(\x05\x12\x1c\n\x14OnTimeInMilliSeconds\x18\x06 \x01(\x05\x12\x1f\n\x17\x43ycleTimeInMilliSeconds\x18\x07 \x01(\x05\x12\x1f\n\x17OutputPsdDataInOffCycle\x18\x08 \x01(\x08\"\xab\x05\n\x1dRFSensorConfigurationEndToEnd\x12,\n\x06\x43\x61\x62les\x18\x01 \x03(\x0b\x32\x1c.MSSO_PSD.CableConfiguration\x12\x34\n\nConnectors\x18\x02 \x03(\x0b\x32 .MSSO_PSD.ConnectorConfiguration\x12\x30\n\x08\x41ntennas\x18\x03 \x03(\x0b\x32\x1e.MSSO_PSD.AntennaConfiguration\x12\x17\n\x0f\x44\x65scriptiveName\x18\x04 \x01(\t\x12\x12\n\nDeviceType\x18\x05 \x01(\t\x12#\n\x1bMinPossibleStartFrequencyHz\x18\x06 \x01(\x01\x12!\n\x19MaxPossibleEndFrequencyHz\x18\x07 \x01(\x01\x12\x15\n\rDeviceAddress\x18\x08 \x01(\t\x12\x1f\n\x17\x43urrentStartFrequencyHz\x18\t \x01(\x01\x12\x1e\n\x16\x43urrentStopFrequencyHz\x18\n \x01(\x01\x12\x0c\n\x04Gain\x18\x0b \x01(\x01\x12\x13\n\x0b\x41ntennaPort\x18\x0c \x01(\t\x12\x13\n\x0bScanPattern\x18\r \x01(\t\x12\x1d\n\x15\x43ommunicationsChannel\x18\x0e \x01(\t\x12$\n\x1cLockingCommunicationsChannel\x18\x0f \x01(\x08\x12\x1f\n\x17\x45\x66\x66\x65\x63tiveSamplingRateHz\x18\x10 \x01(\x01\x12\x11\n\tTuneSleep\x18\x11 \x01(\x05\x12\x1a\n\x12SamplesPerSnapshot\x18\x12 \x01(\x05\x12$\n\x1cNumberOfSnapshotsToThrowAway\x18\x13 \x01(\x05\x12 \n\x18NumberOfSnapshotsPerScan\x18\x14 \x01(\x05\x12\x12\n\nGpsEnabled\x18\x15 \x01(\x08\"~\n\x1e\x43lientAggregationConfiguration\x12\x12\n\nSingleScan\x18\x01 \x01(\x08\x12$\n\x1cMinutesOfDataPerScanFileImpl\x18\x02 \x01(\x01\x12\"\n\x1aSecondsOfDataPerSampleImpl\x18\x03 \x01(\x01\"\xe7\x03\n\'MeasurementStationConfigurationEndToEnd\x12G\n\x16RFSensorConfigurations\x18\x01 \x03(\x0b\x32\'.MSSO_PSD.RFSensorConfigurationEndToEnd\x12J\n\x18\x41ggregationConfiguration\x18\x02 \x01(\x0b\x32(.MSSO_PSD.ClientAggregationConfiguration\x12\x43\n\x12RawIqConfiguration\x18\x03 \x01(\x0b\x32\'.MSSO_PSD.RawIqDataConfigurationElement\x12-\n\x10LastModifiedTime\x18\x04 \x01(\x0b\x32\x13.MSSO_PSD.Timestamp\x12\x1c\n\x14MeasurementStationId\x18\x05 \x01(\t\x12\x0c\n\x04Name\x18\x06 \x01(\t\x12\x10\n\x08Latitude\x18\x07 \x01(\x01\x12\x11\n\tLongitude\x18\x08 \x01(\x01\x12\x13\n\x0b\x44\x65scription\x18\t \x01(\t\x12\x10\n\x08Location\x18\n \x01(\t\x12\x14\n\x0c\x41\x64\x64ressLine1\x18\x0b \x01(\t\x12\x14\n\x0c\x41\x64\x64ressLine2\x18\x0c \x01(\t\x12\x0f\n\x07\x43ountry\x18\r \x01(\t\"\xab\x01\n\x0f\x43onfigDataBlock\x12\'\n\nTime_stamp\x18\x01 \x01(\x0b\x32\x13.MSSO_PSD.Timestamp\x12\x1d\n\x15HardwareConfiguration\x18\x02 \x01(\t\x12P\n\x15\x45ndToEndConfiguration\x18\x03 \x01(\x0b\x32\x31.MSSO_PSD.MeasurementStationConfigurationEndToEnd\"\xd8\x01\n\x14SpectralPsdDataBlock\x12\'\n\nTime_stamp\x18\x01 \x01(\x0b\x32\x13.MSSO_PSD.Timestamp\x12\x18\n\x10StartFrequencyHz\x18\x02 \x01(\x01\x12\x17\n\x0fStopFrequencyHz\x18\x03 \x01(\x01\x12+\n\x0cReading_Kind\x18\x04 \x01(\x0e\x32\x15.MSSO_PSD.ReadingKind\x12\x1c\n\x10OutputDataPoints\x18\x05 \x03(\x11\x42\x02\x10\x01\x12\x19\n\x11NmeaGpggaLocation\x18\x08 \x01(\t\"n\n\x08ScanFile\x12)\n\x06\x43onfig\x18\x01 \x01(\x0b\x32\x19.MSSO_PSD.ConfigDataBlock\x12\x37\n\x0fSpectralPsdData\x18\x02 \x03(\x0b\x32\x1e.MSSO_PSD.SpectralPsdDataBlock*\xc0\x01\n\x0bReadingKind\x12\x0b\n\x07\x41verage\x10\x00\x12\x0b\n\x07Minimum\x10\x01\x12\x0b\n\x07Maximum\x10\x02\x12\x1e\n\x1aStandardDeviationOfAverage\x10\x03\x12\x1e\n\x1aStandardDeviationOfMinimum\x10\x04\x12\x1e\n\x1aStandardDeviationOfMaximum\x10\x05\x12\x14\n\x10\x41verageOfMinimum\x10\x06\x12\x14\n\x10\x41verageOfMaximum\x10\x07')
 )
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
@@ -64,8 +64,8 @@ _READINGKIND = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=2382,
-  serialized_end=2574,
+  serialized_start=2488,
+  serialized_end=2680,
 )
 _sym_db.RegisterEnumDescriptor(_READINGKIND)
 
@@ -314,6 +314,27 @@ _RAWIQDATACONFIGURATIONELEMENT = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
+    _descriptor.FieldDescriptor(
+      name='OnTimeInMilliSeconds', full_name='MSSO_PSD.RawIqDataConfigurationElement.OnTimeInMilliSeconds', index=5,
+      number=6, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='CycleTimeInMilliSeconds', full_name='MSSO_PSD.RawIqDataConfigurationElement.CycleTimeInMilliSeconds', index=6,
+      number=7, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='OutputPsdDataInOffCycle', full_name='MSSO_PSD.RawIqDataConfigurationElement.OutputPsdDataInOffCycle', index=7,
+      number=8, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
   ],
   extensions=[
   ],
@@ -326,7 +347,7 @@ _RAWIQDATACONFIGURATIONELEMENT = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=422,
-  serialized_end=580,
+  serialized_end=676,
 )
 
 
@@ -443,7 +464,7 @@ _RFSENSORCONFIGURATIONENDTOEND = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='BandwidthHz', full_name='MSSO_PSD.RFSensorConfigurationEndToEnd.BandwidthHz', index=15,
+      name='EffectiveSamplingRateHz', full_name='MSSO_PSD.RFSensorConfigurationEndToEnd.EffectiveSamplingRateHz', index=15,
       number=16, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
@@ -457,21 +478,21 @@ _RFSENSORCONFIGURATIONENDTOEND = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='SamplesPerScan', full_name='MSSO_PSD.RFSensorConfigurationEndToEnd.SamplesPerScan', index=17,
+      name='SamplesPerSnapshot', full_name='MSSO_PSD.RFSensorConfigurationEndToEnd.SamplesPerSnapshot', index=17,
       number=18, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='NumberOfSampleBlocksToThrowAway', full_name='MSSO_PSD.RFSensorConfigurationEndToEnd.NumberOfSampleBlocksToThrowAway', index=18,
+      name='NumberOfSnapshotsToThrowAway', full_name='MSSO_PSD.RFSensorConfigurationEndToEnd.NumberOfSnapshotsToThrowAway', index=18,
       number=19, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='NumberOfSampleBlocksPerScan', full_name='MSSO_PSD.RFSensorConfigurationEndToEnd.NumberOfSampleBlocksPerScan', index=19,
+      name='NumberOfSnapshotsPerScan', full_name='MSSO_PSD.RFSensorConfigurationEndToEnd.NumberOfSnapshotsPerScan', index=19,
       number=20, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
@@ -495,8 +516,8 @@ _RFSENSORCONFIGURATIONENDTOEND = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=583,
-  serialized_end=1256,
+  serialized_start=679,
+  serialized_end=1362,
 )
 
 
@@ -539,8 +560,8 @@ _CLIENTAGGREGATIONCONFIGURATION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1258,
-  serialized_end=1384,
+  serialized_start=1364,
+  serialized_end=1490,
 )
 
 
@@ -653,8 +674,8 @@ _MEASUREMENTSTATIONCONFIGURATIONENDTOEND = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1387,
-  serialized_end=1874,
+  serialized_start=1493,
+  serialized_end=1980,
 )
 
 
@@ -697,8 +718,8 @@ _CONFIGDATABLOCK = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1877,
-  serialized_end=2048,
+  serialized_start=1983,
+  serialized_end=2154,
 )
 
 
@@ -762,8 +783,8 @@ _SPECTRALPSDDATABLOCK = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2051,
-  serialized_end=2267,
+  serialized_start=2157,
+  serialized_end=2373,
 )
 
 
@@ -799,8 +820,8 @@ _SCANFILE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2269,
-  serialized_end=2379,
+  serialized_start=2375,
+  serialized_end=2485,
 )
 
 _TIMESTAMP.fields_by_name['scale'].enum_type = _TIMESTAMP_TIMESPANSCALE
