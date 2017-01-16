@@ -63,9 +63,9 @@ def print_data_block_summary(rawIQ_read,raw_plot,psd_plot,dump_csv,f_write,dump_
 		#(comment out to reduce amount of information displayed.)
 		print "Block " + str(cnt) + " : "
 		print "\t timestamp : " + time.ctime(data_block.Time_stamp.value/10000000  + time.altzone)	#Python automatically adjusts the timezone, but that is not desirable. So, roll-back by adding back the time offset  "time.altzone". 
-		print "\t Start Freq : " + str((data_block.StartFrequencyHz)/1e6) + "Mhz"
-		print "\t Stop Freq : " + str((data_block.StopFrequencyHz)/1e6) + "Mhz"
-		print "\t Center Freq : " + str((data_block.CenterFrequencyHz)/1e6) + "Mhz"
+		print "\t Start Freq : " + str((data_block.StartFrequencyHz)/1e6) + "MHz"
+		print "\t Stop Freq : " + str((data_block.StopFrequencyHz)/1e6) + "MHz"
+		print "\t Center Freq : " + str((data_block.CenterFrequencyHz)/1e6) + "MHz"
 		print "\t NmeaGpggaLocation : " + data_block.NmeaGpggaLocation
 		print "\t Data count : " + str(len(data_block.DataPoints)/2)
 
@@ -80,7 +80,7 @@ def print_data_block_summary(rawIQ_read,raw_plot,psd_plot,dump_csv,f_write,dump_
 			#q component
 			plt.plot(np.imag(data_block_complex),'r')
 			plt.ylabel('Amplitude')
-			plt.title('RAW IQ data plot. Freq:' + str((data_block.CenterFrequencyHz)/1e6) + "Mhz" + ', Timestamp:' + str(data_block.Time_stamp.value))
+			plt.title('RAW IQ data plot. Freq:' + str((data_block.CenterFrequencyHz)/1e6) + "MHz" + ', Timestamp:' + str(data_block.Time_stamp.value))
 			#plot
 			plt.show()		
 
@@ -101,7 +101,7 @@ def print_data_block_summary(rawIQ_read,raw_plot,psd_plot,dump_csv,f_write,dump_
 			plt.plot(f_offsetted[1:], psd_decibel[1:])
 			plt.ylim(ymax = 0, ymin = -175)
 			plt.xlabel('frequency (MHz)')
-			plt.title('RAW IQ data PSD plot. Freq:' + str((data_block.CenterFrequencyHz)/1e6) + "Mhz" + ', Timestamp:' + str(data_block.Time_stamp.value))
+			plt.title('RAW IQ data PSD plot. Freq:' + str((data_block.CenterFrequencyHz)/1e6) + "MHz" + ', Timestamp:' + str(data_block.Time_stamp.value))
 			plt.ylabel('PSD')
 			plt.show()
 		
@@ -110,9 +110,9 @@ def print_data_block_summary(rawIQ_read,raw_plot,psd_plot,dump_csv,f_write,dump_
 			#dump metadata of the snapshot
 			f_write.write("Block," + str(cnt) + "\n")
 			f_write.write("timestamp," + time.ctime(data_block.Time_stamp.value/10000000  + time.altzone) + "\n")	#Python automatically adjusts the timezone, but that is not desirable. So, roll-back by adding back the time offset  "time.altzone". 
-			f_write.write("Start Freq," + str((data_block.StartFrequencyHz)/1e6) + "Mhz" + "\n")
-			f_write.write("Stop Freq," + str((data_block.StopFrequencyHz)/1e6) + "Mhz" + "\n")
-			f_write.write("Center Freq," + str((data_block.CenterFrequencyHz)/1e6) + "Mhz" + "\n")
+			f_write.write("Start Freq," + str((data_block.StartFrequencyHz)/1e6) + "MHz" + "\n")
+			f_write.write("Stop Freq," + str((data_block.StopFrequencyHz)/1e6) + "MHz" + "\n")
+			f_write.write("Center Freq," + str((data_block.CenterFrequencyHz)/1e6) + "MHz" + "\n")
 			f_write.write("NmeaGpggaLocation," + data_block.NmeaGpggaLocation + "\n")
 			f_write.write("Data count," + str(len(data_block.DataPoints)/2) + "\n")
 			
@@ -146,10 +146,10 @@ def print_data_block_summary(rawIQ_read,raw_plot,psd_plot,dump_csv,f_write,dump_
 	print "\n---------SUMMARY---------------\n"
 	print "min_time : " + time.ctime(min_time/10000000 + time.altzone) 
 	print "max_time : " + time.ctime(max_time/10000000  + time.altzone) 
-	print "min starting freq : " +  str((min_freq)/1e6) + "Mhz"
-	print "max stoping freq : " +  str((max_freq)/1e6) + "Mhz"
+	print "min starting freq : " +  str((min_freq)/1e6) + "MHz"
+	print "max stoping freq : " +  str((max_freq)/1e6) + "MHz"
 	print "Total IQ Data points #: " + str(data_cnt_sum)
-	print "Total IQ Data points (in bytes): " + str(data_cnt_sum * 8) + "Bytes (" + str((data_cnt_sum * 8)/(1024.0*1024)) + "MiB)"
+	print "Total IQ Data points (in bytes): " + str(data_cnt_sum * 8 *2) + "Bytes (" + str((data_cnt_sum * 8 *2)/(1024.0*1024)) + "MiB)"
 	print "\n-------------------------------\n"
 
 #--------------------------------------------------
