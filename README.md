@@ -20,7 +20,7 @@
 
 (Windows + .Net runtime), or
 
-	mono decompress.exe data_file_path output_file_path
+	mono decompress.exe source_path output_path
 
 (Linux + Mono runtime). 
 
