@@ -80,7 +80,7 @@ Mono runtime:
 An uncompressed protobuf file to a human-readable text file, using protoc:  
 Command to convert RAW IQ files (assuming that rawIQ.proto file is located in current directory. Also assuming UNIX-like Shell style syntax):  
 
-	protoc -I=./ --decode=MSSO_RawIQ.RawIqFile ./rawIQ.proto < input_path > output_path  
+	protoc -I=./ --decode=MSSO_RawIQ.RawIqFile ./rawIQ.proto < input_path > output_path 
 
 Command to convert PSD files (same assumptions as above):  
 
@@ -147,6 +147,13 @@ In Debian-based Linux distros, you can simply download protobuf by running sudo 
 **Decompress.exe won't run:**
 
 -Try installing recent version of .NET Framework (Windows) or Mono (Linux).
+
+**Decoded data look incorrect.**
+
+-Check if you used the correct parser script - psdFile_process.py for aggregated PSD files, rawIQ_process.py for raw I-Q data files.
+
+-If you suspect that the data generated from the station is incorrect (=fault of the station, not the parser), try contacting the station administrator.
+
 
 **It takes very long (several minutes) to decode data.**
 
