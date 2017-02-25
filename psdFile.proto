@@ -75,11 +75,12 @@ message RFSensorConfigurationEndToEnd{
   optional string CommunicationsChannel = 14;  
   optional bool LockingCommunicationsChannel = 15;  
   optional double EffectiveSamplingRateHz = 16;
-  optional int32 TuneSleep = 17;
+  optional int32 PLLLockPollingInterval = 17;
   optional int32 SamplesPerSnapshot = 18;     
   optional int32 NumberOfSnapshotsToThrowAway = 19;     
   optional int32 NumberOfSnapshotsPerScan = 20;
   optional bool GpsEnabled = 21;  
+  optional int32 AdditionalTuneDelay = 22;
 }
 
 //PSD data generation and upload settings.
