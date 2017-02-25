@@ -71,10 +71,18 @@ def data_to_float_decibel(ary):
 #out : time scale (returned value * timestamp value = POSIX timestamp).
 def determine_timescale(scale):
 	time_scale = 0
-	if scale == psdFile_pb2.Timestamp.HOURS:	#Hours
+	if scale == psdFile_pb2.Timestamp.DAYS:	#days
+		time_scale = 86400		
+	elif scale == psdFile_pb2.Timestamp.HOURS:	#Hours
 		time_scale = 3600
 	elif scale == psdFile_pb2.Timestamp.MINUTES: #Minutes
 		time_scale = 60
+	elif scale == psdFile_pb2.Timestamp.SECONDS: #Seconds
+		time_scale = 1
+	elif scale == psdFile_pb2.Timestamp.MILLISECONDS: #Minutes
+		time_scale = 1.0/1000
+	elif scale == psdFile_pb2.Timestamp.TICKS:	#ticks
+		time_scale = 1.0/10000000
 	else:
 		raise Exception('Unexpected timestamp scale.')		
 		
