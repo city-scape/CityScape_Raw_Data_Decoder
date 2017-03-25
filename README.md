@@ -45,6 +45,8 @@ decompress.exe : Decompresses dsox or dsor files into uncompressed Protobuffer f
 
 decompress.cs : source code of decompress.exe. 
 
+decompress.py : Python equivalent of decompress.exe (if you prefer Python).
+
 protobuf-windows-build(full).zip: protobuf binary, with max file size = 512M, for Windows 7 or higher.  
 
 protoc.exe : protobuffer compiler (for Windows). Can be used to decode a protobuffer database file and generate a human-readable text file. Max file size = 512MB (Use Python based parser for larger files).
