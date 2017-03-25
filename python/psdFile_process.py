@@ -1,16 +1,14 @@
 #!/usr/bin/env python
 
-#This script accepts an uncompressed Microsoft Spectrum Observatory PSD scan file, processes and displays summarized results.
-#Note that spectrum observatory scan files are compressed in default. Decompress them with decompress.exe first (.NET / Mono executable).
+#This script accepts a Microsoft Spectrum Observatory PSD scan file, processes and displays summarized results.
 
 #Usage : ./psdFile_process.py target_file (Unix with execute permission)
 #         python psdFile_process.py target_file (Windows or with non-execute permission)
 #Requirements: Python 2.7 with Protoc Python bindings (Ubuntu package name: python-protobuf). psdFile_pb2.py must be present in the same directory.
 
 #See: https://developers.google.com/protocol-buffers/docs/pythontutorial
-#(* This source code is heavily based on the example codes present on the above website.)
 
-#Last-modified: Nov 27, 2016 (Kyeong Su Shin)
+#Last-modified: Mar 25, 2017 (Kyeong Su Shin)
 #TODO : refactoring (getting quite dirty..)
 
 import sys
@@ -21,6 +19,11 @@ import time
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy.io as sio
+import zlib
+
+#Decompress (before parsing)
+def decompress (dat):
+	return zlib.decompress(dat,-15)
 
 #Converts "Reading Kind" enum to String.
 #("Reading Kind" enums is an enumeratation type used by the PSD scan file to identify the 
@@ -191,7 +194,6 @@ parser.add_argument("path", help="input file path")
 parser.add_argument("-p", "--plot-psd", type=int, nargs='?', const=-1, help="Plot PSD Data at (PLOT_PSD)th block. Prints out every snapshots if setted zero.")
 parser.add_argument("-d", "--dump-csv", type=int, nargs='?', const=-1, help="Dumps (DUMP_CSV)th data block to a CSV file. Name of the generated snapshot file is equal to the name of the input file with .csv appended at the end. Dumps out every snapshots if setted zero.")
 parser.add_argument("-m", "--dump-mat", type=int, nargs='?', const=-1, help="Dumps (DUMP_CSV)th data block to a mat file. Dumps out every snapshots if setted zero.")
-
 args=parser.parse_args()
 
 #open file.
@@ -203,10 +205,18 @@ if args.dump_csv >= 0:
 else:
 	f_write = "";
 
-#read and close file.
-scan_file_read = psdFile_pb2.ScanFile()
-scan_file_read.ParseFromString(f.read())
+#Attempt decompression. If fails, assume decompressed data and just push that into the Protobuf decoder.
+f_str = f.read()
 f.close()
+try:
+	decompress_out = decompress (f_str)
+	f_str = decompress_out
+except Exception:
+	pass
+	
+#Parse.
+scan_file_read = psdFile_pb2.ScanFile()
+scan_file_read.ParseFromString(f_str)
 
 #process.
 print_file_summary(scan_file_read,args.plot_psd,args.dump_csv,args.dump_mat)

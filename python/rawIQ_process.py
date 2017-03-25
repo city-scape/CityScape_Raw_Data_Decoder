@@ -1,16 +1,14 @@
 #!/usr/bin/env python
 
-#This script accepts an uncompressed Microsoft Spectrum Observatory RAW IQ scan file, processes and displays summarized results.
-#Note that spectrum observatory scan files are compressed in default. Decompress them with decompress.exe first (.NET / Mono executable).
+#This script accepts a Microsoft Spectrum Observatory RAW IQ scan file, processes and displays summarized results.
 
 #Usage : ./rawIQ_process.py target_file (Unix with execute permission)
 #         python rawIQ_process.py target_file (Windows or with non-execute permission)
 #Requirements: Python 2.7 with Protoc Python bindings (Ubuntu package name: python-protobuf). rawIQ_pb2.py must be present in the same directory.
 
 #See: https://developers.google.com/protocol-buffers/docs/pythontutorial
-#(* This source code is heavily based on the example codes present on the above website.)
 
-#Last-modified: Nov 27, 2016 (Kyeong Su Shin)
+#Last-modified: Mar 25, 2017 (Kyeong Su Shin)
 #TODO : refactoring (getting quite dirty..)
 
 import sys
@@ -21,9 +19,14 @@ import time
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy.io as sio
+import zlib
 
 from scipy import signal
 from operator import add
+
+#Decompress (before parsing)
+def decompress (dat):
+	return zlib.decompress(dat,-15)
 
 #Print out the "config" section of the data file and call "print_data_block_summary"
 #to print out the summarized version of the RAW IQ snapshot blocks.
@@ -188,10 +191,19 @@ if args.dump_cfile >= 0:
 else:
 	f_write_cfile = "";
 
+#Attempt decompression. If fails, assume decompressed data and just push that into the Protobuf decoder.
+f_str = f.read()
+f.close()
+try:
+	decompress_out = decompress (f_str)
+	f_str = decompress_out
+except Exception:
+	pass
+
+
 #read and close file.
 rawIQ_read = rawIQ_pb2.RawIqFile()
-rawIQ_read.ParseFromString(f.read())
-f.close()
+rawIQ_read.ParseFromString(f_str)
 
 #process.
 print_rawIQ_summary(rawIQ_read,args.plot_raw,args.plot_psd,args.dump_csv,f_write_csv,args.dump_mat,f_write_cfile,args.dump_cfile)
