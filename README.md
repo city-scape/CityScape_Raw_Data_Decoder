@@ -12,19 +12,9 @@
 	
 	-SciPy
 
-2.Download the files (decompress.exe and "python" directory).
+2.Download the files ("python" directory).
 
-3.Launch a terminal (command prompt) on where the downloaded files are located. run:
-
-	decompress.exe source_path output_path
-
-(Windows + .Net runtime), or
-
-	mono decompress.exe source_path output_path
-
-(Linux + Mono runtime). 
-
-This will decompress the data file (but will not convert them to Matlab-supported format yet).
+3.Launch a terminal (command prompt), and cd to the python directory.
 
 4.To dump data into Matlab-supported format (.mat), run (from where the downloaded Python files are located):
 
@@ -64,9 +54,7 @@ python/psdFile_process.py : A sample Python program to read and process uncompre
 python/rawIQ_process.py : A sample Python program to read and process uncompressed RAW IQ files.  Provides a simple CLI interface to plot or dump the data.
 
 ## Usage
-### Decompressing Files
-
-You need to decompress the downloaded dsor or dsox files before processing them with Protobuf.
+### Decompressing Files (Optional if using Python-based Parser)
 
 Decompress(uncompress) dsor or dsox files into an uncompressed Protobuf files:  
 
@@ -78,7 +66,7 @@ Mono runtime:
 
 	mono decompress.exe source_path output_path  
 
-### Decoding, with "protoc"
+### Parsing, with "protoc"
 An uncompressed protobuf file to a human-readable text file, using protoc:  
 Command to convert RAW IQ files (assuming that rawIQ.proto file is located in current directory. Also assuming UNIX-like Shell style syntax):  
 
@@ -105,10 +93,7 @@ Dependency :
 	
 	-SciPy
 
-Uncompress dsor or dsox files into uncompressed protobuf files (see "Decompressing Files" section), and pass them into the Python scripts ("rawIQ_process.py or psdFile_process.py").  
-ex:  
-
-	mono decompress.exe RAW_IQ.bin.dsor RAW_IQ.bin	#Uncompresses the file.  
+example, for extracting data into matlab (mat) files:   
 
 	python/rawIQ_process.py -m0 RAW_IQ.bin		#Process the uncompressed file. Dump all data into Matlab (.mat) files.
 
@@ -144,8 +129,6 @@ In Debian-based Linux distros, you can simply download protobuf by running sudo 
 
 -Supplied *_pb2.py files may not work correctly with some versions of Python-Protobuf library. You can re-build *_pb2.py files with your own Protobuf library. Alternatively, you can try different versions of Python-Protobuf library. *_pb2.py rebuild Guide : https://developers.google.com/protocol-buffers/docs/pythontutorial .
 
--Make sure you input extracted file (by decompress.exe) to the Python script, not the compressed file. Compressed files **will** cause an exception.
-
 **Decompress.exe won't run:**
 
 -Try installing recent version of .NET Framework (Windows) or Mono (Linux).
@@ -157,6 +140,6 @@ In Debian-based Linux distros, you can simply download protobuf by running sudo 
 -If you suspect that the data generated from the station is incorrect (=fault of the station, not the parser), try contacting the station administrator.
 
 
-**It takes very long (several minutes) to decode data.**
+**It takes very long (several minutes) to parse data.**
 
 Yes.
