@@ -25,10 +25,8 @@ class ProcessedData:
 		self.freq = []
 		self.psd_avg_sum = []
 		self.psd_avg_sum_cnt = 0
-		self.psd_max_sum = []
-		self.psd_max_sum_cnt = 0
-		self.psd_min_sum = []
-		self.psd_min_sum_cnt = 0
+		self.psd_max = []
+		self.psd_min = []
 
 #Decompress (before parsing)
 def decompress (dat):
@@ -110,11 +108,11 @@ def process_stage1(data,pdinst):
 		pd.data_length = len(data.SpectralPsdData[0].OutputDataPoints)
 		pd.freq_s = (data.SpectralPsdData[0].StartFrequencyHz)/1e6
 		pd.freq_e = (data.SpectralPsdData[0].StopFrequencyHz)/1e6
-		pd.freq = np.linspace(pd.freq_s,pd.freq_e,pd.data_length)
+		pd.freq = np.transpose(np.linspace(pd.freq_s,pd.freq_e,pd.data_length))
 		pd.psd_avg_sum = np.zeros((pd.data_length,1),dtype=np.float32)
-		pd.psd_max_sum = np.zeros((pd.data_length,1),dtype=np.float32)
-		pd.psd_min_sum = np.zeros((pd.data_length,1),dtype=np.float32)
-
+		pd.psd_max = np.subtract (np.zeros((pd.data_length,1),dtype=np.float32) , float('inf'))
+		pd.psd_min = np.add (np.zeros((pd.data_length,1),dtype=np.float32) , float('inf'))
+		
 #Process the data points.
 def process_stage2(data,pd):
 
@@ -131,11 +129,9 @@ def process_stage2(data,pd):
 			pd.psd_avg_sum_cnt = pd.psd_avg_sum_cnt  + 1
 			pd.psd_avg_sum = np.add(pd.psd_avg_sum,db_data)
 		elif reading_kind == 1:	#Data is for min hold
-			pd.psd_min_sum_cnt = pd.psd_min_sum_cnt + 1
-			pd.psd_min_sum = np.add(pd.psd_min_sum,db_data)
+			pd.psd_min = np.minimum(pd.psd_min,db_data)
 		elif reading_kind == 2:	#Data is for max hold
-			pd.psd_max_sum_cnt = pd.psd_max_sum_cnt + 1
-			pd.psd_max_sum = np.add(pd.psd_max_sum,db_data)
+			pd.psd_max = np.maximum(pd.psd_max,db_data)
 		
 		#plot the result (if requested).
 		#if plot_psd == cnt or plot_psd == 0:
@@ -147,7 +143,7 @@ def process_stage2(data,pd):
 		#	plt.show()
 
 #Plots PSD (tk button callback)
-def plot_psd(pd,start,end,ymin,ymax):
+def plot_psd(pd,start,end,ymin,ymax,plot_min,plot_avg,plot_max):
 	try:		
 		start_freq = float(start)
 		end_freq = float(end)
@@ -163,9 +159,13 @@ def plot_psd(pd,start,end,ymin,ymax):
 		array_pos_end = int(((end_freq - pd.freq_s) / (pd.freq_e - pd.freq_s)) * pd.data_length)
 		
 		plt.figure()
-		plt.plot(pd.freq[array_pos_start:array_pos_end+1],pd.psd_avg_sum[array_pos_start:array_pos_end+1] / pd.psd_avg_sum_cnt, 'b', label="Average")
-		plt.plot(pd.freq[array_pos_start:array_pos_end+1],pd.psd_max_sum[array_pos_start:array_pos_end+1] / pd.psd_max_sum_cnt, 'r', label="Max Hold")
-		#plt.plot(pd.freq[array_pos_start:array_pos_end+1],pd.psd_min_sum[array_pos_start:array_pos_end+1] / pd.psd_min_sum_cnt, 'k', label="Min Hold")
+		if(plot_avg):
+			plt.plot(pd.freq[array_pos_start:array_pos_end+1],pd.psd_avg_sum[array_pos_start:array_pos_end+1] / pd.psd_avg_sum_cnt, 'b', label="Average")
+		if(plot_max):
+			plt.plot(pd.freq[array_pos_start:array_pos_end+1],pd.psd_max[array_pos_start:array_pos_end+1] , 'r', label="Max Hold")
+		if(plot_min):
+			plt.plot(pd.freq[array_pos_start:array_pos_end+1],pd.psd_min[array_pos_start:array_pos_end+1] , 'k', label="Min Hold")
+			
 		plt.axis([start_freq,end_freq,ymin,ymax])
 		plt.legend(loc='upper center', shadow=True)
 		plt.xlabel('frequency (MHz)')
@@ -175,12 +175,41 @@ def plot_psd(pd,start,end,ymin,ymax):
 		
 	except Exception as a:
 		tkMessageBox.showinfo(message="Plot failed (Check your inputs arguments). Exception Message : " + str(a))
+
+#Exports to .mat (tk button callback)
+def export_mat(pd,start,end,ymin,ymax):
+	try:		
+		start_freq = float(start)
+		end_freq = float(end)
+		ymin = float(ymin)
+		ymax = float(ymax)
+		
+		if (start_freq < pd.freq_s) or (start_freq > pd.freq_e) or (end_freq < pd.freq_s) or (end_freq > pd.freq_e):
+			raise Exception ('Error: Start / End Freq Mismatch')
+		if start_freq > end_freq:
+			raise Exception ('Error: End Freq > Start Freq')
+
+		array_pos_start = int(((start_freq - pd.freq_s) / (pd.freq_e - pd.freq_s)) * pd.data_length)
+		array_pos_end = int(((end_freq - pd.freq_s) / (pd.freq_e - pd.freq_s)) * pd.data_length)
+		
+		
+		afn = {}
+		afn['defaultextension'] = '.mat'
+		afn['filetypes'] = [('Matlab Data File','.mat')]
+		fpath = tkFileDialog.asksaveasfilename(**afn)
+		
+		sio.savemat(fpath,{'Freq':pd.freq[array_pos_start:array_pos_end+1],'Avg':pd.psd_avg_sum[array_pos_start:array_pos_end+1] / pd.psd_avg_sum_cnt , 'Max_Hold':pd.psd_max[array_pos_start:array_pos_end+1] ,'Min_Hold':pd.psd_min[array_pos_start:array_pos_end+1]})	
+		
+	except Exception as a:
+		tkMessageBox.showinfo(message="Export failed (Check your inputs arguments). Exception Message : " + str(a))
+
 #--------------------------------------------------
 # Main routine (int main() equivalent)
 #--------------------------------------------------
 
 #init tk
 root = Tk()
+root.wm_title("Cityscape PSD Data File Plotter (For Testing)")
 
 #add tabs
 note = Notebook(root)
@@ -191,7 +220,6 @@ note.add(tab2, text='Config String')
 note.pack()
 
 label_0= Label(tab1, text = "Processing...")
-
 label_0.grid(row=0,column=0,sticky="W")
 
 #File Open dialog
@@ -255,13 +283,29 @@ entry_ymax.grid(row=3,column=1)
 entry_ymin.insert(0,"-140")
 entry_ymax.insert(0,"0")
 
+#Checkbox to turn on/off min max avg from plot.
+c_min_var = IntVar(value=0)
+c_avg_var = IntVar(value=1)
+c_max_var = IntVar(value=1)
+
+c_min = Checkbutton(tab1, text="Min Hold", variable=c_min_var)
+c_avg = Checkbutton(tab1, text="Average", variable=c_avg_var)
+c_max = Checkbutton(tab1, text="Max Hold", variable=c_max_var)
+
+c_min.grid(row=4,column=0)
+c_avg.grid(row=4,column=1)
+c_max.grid(row=4,column=2)
+
 #button
-butt = Button(tab1, text="Plot", command= lambda: plot_psd(pd,entry_freq_start.get(),entry_freq_stop.get(),entry_ymin.get(),entry_ymax.get()))	#:-|
-butt.grid(row=4,column=0)
+butt = Button(tab1, text="Plot", command= lambda: plot_psd(pd,entry_freq_start.get(),entry_freq_stop.get(),entry_ymin.get(),entry_ymax.get(),c_min_var.get(),c_avg_var.get(),c_max_var.get()))	#:-|
+butt.grid(row=5,column=0)
+
+butt = Button(tab1, text="Export to Matlab", command= lambda: export_mat(pd,entry_freq_start.get(),entry_freq_stop.get(),entry_ymin.get(),entry_ymax.get()))	#:-|
+butt.grid(row=5,column=1)
 
 #Display some properties
-Label(tab1, text = "Start Freq (MHz):"+str(pd.freq_s)+"   ").grid(row=5,column=0,sticky="W")
-Label(tab1, text = "End Freq (MHz):"+str(pd.freq_e)+"   ").grid(row=5,column=1,sticky="W")
+Label(tab1, text = "Start Freq (MHz):"+str(pd.freq_s)+"   ").grid(row=6,column=0,sticky="W")
+Label(tab1, text = "End Freq (MHz):"+str(pd.freq_e)+"   ").grid(row=6,column=1,sticky="W")
 
 sensor_cnt = 1
 
@@ -276,13 +320,13 @@ for sensor in scan_file_read.Config.EndToEndConfiguration.RFSensorConfigurations
 	AddnTuneDelay = sensor.AdditionalTuneDelay
 	
 	#Display
-	Label(tab1, text = "Sensor #" + str(sensor_cnt)).grid(row=3+(sensor_cnt*3),column=0,sticky="W")
-	Label(tab1, text = "Gain:"+str(GainLevel)+"   ").grid(row=4+(sensor_cnt*3),column=0,sticky="W")
-	Label(tab1, text = "Antenna Port:"+AntennaPort+"   ").grid(row=4+(sensor_cnt*3),column=1,sticky="W")
-	Label(tab1, text = "Scan Pattern:"+ScanPattern+"   ").grid(row=4+(sensor_cnt*3),column=2,sticky="W")
-	Label(tab1, text = "Effective Samp Rate:"+str(EffSampRate)+"   ").grid(row=5+(sensor_cnt*3),column=0,sticky="W")
-	Label(tab1, text = "Samples Per Snapshot:"+str(SnapshotSize)+"   ").grid(row=5+(sensor_cnt*3),column=1,sticky="W")
-	Label(tab1, text = "Additional Tune Delay:"+str(AddnTuneDelay)+"   ").grid(row=5+(sensor_cnt*3),column=2,sticky="W")
+	Label(tab1, text = "Sensor #" + str(sensor_cnt)).grid(row=4+(sensor_cnt*3),column=0,sticky="W")
+	Label(tab1, text = "Gain:"+str(GainLevel)+"   ").grid(row=5+(sensor_cnt*3),column=0,sticky="W")
+	Label(tab1, text = "Antenna Port:"+AntennaPort+"   ").grid(row=5+(sensor_cnt*3),column=1,sticky="W")
+	Label(tab1, text = "Scan Pattern:"+ScanPattern+"   ").grid(row=5+(sensor_cnt*3),column=2,sticky="W")
+	Label(tab1, text = "Effective Samp Rate:"+str(EffSampRate)+"   ").grid(row=6+(sensor_cnt*3),column=0,sticky="W")
+	Label(tab1, text = "Samples Per Snapshot:"+str(SnapshotSize)+"   ").grid(row=6+(sensor_cnt*3),column=1,sticky="W")
+	Label(tab1, text = "Additional Tune Delay:"+str(AddnTuneDelay)+"   ").grid(row=6+(sensor_cnt*3),column=2,sticky="W")
 	
 	sensor_cnt = sensor_cnt + 1
 
