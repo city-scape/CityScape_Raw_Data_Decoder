@@ -123,6 +123,13 @@ In Debian-based Linux distros, you can simply download protobuf by running sudo 
   
 -Power in the PSD files are represented in a fixed-point format ( https://en.wikipedia.org/wiki/Q_(number_format) ), which are then stored as signed int16 numbers. 
 
+### Units of the I-Q Data and PSD Estimates
+-If your station is amplitude-calibrated, generated I-Q Data are normalized in a such way that the periodogram of the I-Q data will generate power spectral densitiy estimates in a dBm scale (instead of in arbitrary scale). This is done by applying a software-level amplification (or attenuation) to the received I-Q data. If the station is not calibrated, it will generate data in an arbitrary scale.
+
+Currently (May 10, 2017), every station hosted at cityscape.cloudapp.net are amplitude-calibrated.
+
+-Similarly, PSD estimate data are in dBm/(FFT Bin Size) if the station is amplitude-calibrated. If not, it is in an arbitrary scale.
+
 ### Troubleshoot
 
 **Exception thrown by the Python script:**
