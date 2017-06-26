@@ -105,7 +105,7 @@ def print_data_block_summary(rawIQ_read,raw_plot,psd_plot,dump_csv,f_write_csv,d
 			plt.ylim(ymax = 0, ymin = -175)
 			plt.xlabel('frequency (MHz)')
 			plt.title('RAW IQ data PSD plot. Freq:' + str((data_block.CenterFrequencyHz)/1e6) + "MHz" + ', Timestamp:' + str(data_block.Time_stamp.value))
-			plt.ylabel('PSD')
+			plt.ylabel('PSD (dBm/Bin if Calibrated Sensor, dBFS/Bin if not)')
 			plt.show()
 		
 		#dump to CSV
