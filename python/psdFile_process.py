@@ -145,7 +145,7 @@ def print_data_block_summary(data,plot_psd,dump_csv,dump_mat):
 			plt.plot(freq_mhz,db_data[0:])
 			plt.xlabel('frequency (MHz)')
 			plt.title('PSD plot. Timestamp:' + str(data_block.Time_stamp.value) + ', Type : ' + get_reading_kind(data_block.Reading_Kind))
-			plt.ylabel('PSD (dB)')
+			plt.ylabel('PSD (dBm/Bin if Calibrated Sensor, dBFS/Bin if Not Calibrated)')
 			plt.show()
 
 		#dump to a CSV file (if requested).
